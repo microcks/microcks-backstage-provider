@@ -16,11 +16,10 @@
 
 export type KeycloakConfig = {
   realm: string;
-  authServerUrl: string;
-  sslRequired: string;
-  serviceAccountCredentials: string;
+  "auth-server-url": string;
+  "ssl-required": string;
   resource: string;
-  isEnabled: boolean;
+  enabled: boolean;
 };
 
 export type Service = {

@@ -18,7 +18,7 @@ import { Contract, KeycloakConfig, Service } from "./types";
 
 export function getKeycloakConfig(baseUrl: string): Promise<KeycloakConfig> {
   var url: string = getApiUrl(baseUrl);
-  // Fecthing the Keycloak configuration.
+  // Fetching the Keycloak configuration.
   return fetch(url + '/keycloak/config')
     .then(response => {
       if (!response.ok) {
@@ -34,7 +34,7 @@ export function listServices(baseUrl: string, authorization: string, page: numbe
   // Fetching the page of services.
   return fetch(url, {
     headers: {
-      'Authorization': authorization
+      'Authorization': `Bearer ${authorization}`
     }
   })
   .then(response => {

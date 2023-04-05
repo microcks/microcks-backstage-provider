@@ -150,11 +150,12 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     var keycloakConfig: KeycloakConfig = await getKeycloakConfig(this.baseUrl);
 
     var oauthToken: string;
-    if (keycloakConfig.isEnabled) {
-      const authServerUrl = keycloakConfig.authServerUrl + '/realms/' + keycloakConfig.realm + '/protocol/openid-connect/token';
+    if (keycloakConfig.enabled) {
+      const authServerUrl = keycloakConfig['auth-server-url'] + '/realms/' + keycloakConfig.realm + '/protocol/openid-connect/token';
       this.logger.info(`Keycloak authentication is enabled, retrieving a OAuth token on ${authServerUrl}`);
       
       oauthToken = await connectAndGetOAuthToken(authServerUrl, this.serviceAccount, this.serviceAccountCredentials);
+      oauthToken = JSON.parse(oauthToken)['access_token'];
     } else {
       oauthToken = '<anonymous-admin-token>';
       this.logger.info('Keycloak authentication is not enabled, using a fake token.')
@@ -164,11 +165,12 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     var services: Service[];
     var fetchServices: boolean = true;
     while (fetchServices) {
+      this.logger.debug(`Fetching API from Microck on ${this.baseUrl}, page ${page}`);
       services = await listServices(this.baseUrl, oauthToken, page, MicrocksApiEntityProvider.SERVICES_FETCH_SIZE);
 
       for (let i = 0; i < services.length; i++) {
         const service = services[i];
-        this.logger.debug("Find service " + service.name + " - " + service.version);
+        this.logger.debug("Find API " + service.name + " - " + service.version);
 
         if (this.isServiceCandidate(service)) {
           // Fetch the service contracts.
