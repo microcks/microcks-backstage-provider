@@ -22,7 +22,7 @@ export function getKeycloakConfig(baseUrl: string): Promise<KeycloakConfig> {
   return fetch(url + '/keycloak/config')
     .then(response => {
       if (!response.ok) {
-        //throw new Error(response.statusText)
+        throw new Error('Error while reading Keycloack config on Microcks, code: ' + response.status);
       }
       return response.json() as Promise<KeycloakConfig>;
     })
@@ -35,11 +35,13 @@ export function listServices(baseUrl: string, authorization: string, page: numbe
   return fetch(url, {
     headers: {
       'Authorization': `Bearer ${authorization}`
+      //'Authorization': `${authorization}`
     }
   })
   .then(response => {
     if (!response.ok) {
-      //throw new Error(response.statusText)
+      console.log(JSON.stringify(response));
+      throw new Error('Error while fetching services on Microcks, code: ' + response.status);
     }
     return response.json() as Promise<Service[]>
   });
@@ -56,7 +58,7 @@ export function getServiceResource(baseUrl: string, authorization: string, servi
   })
   .then(response => {
     if (!response.ok) {
-      //throw new Error(response.statusText)
+      throw new Error('Error while fetching resources on Microcks, code: ' + response.status);
     }
     return response.json() as Promise<Contract[]>
   });

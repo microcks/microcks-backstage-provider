@@ -36,6 +36,8 @@ import { readMicrocksApiEntityConfigs } from './config';
 import { MicrocksConfig } from './types';
 
 /**
+ * A backstage entity provider that fetches API definitions and resources (OpenAPI, AsyncAPI and GRPC contracts)
+ * from one or Microcks instances.
  * @author laurent
  */
 export class MicrocksApiEntityProvider implements EntityProvider {
@@ -139,6 +141,9 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     await this.scheduleFn();
   }
 
+  /**
+   * Main fetching / entity reconciliation loop.s
+   */
   async run(): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
@@ -146,63 +151,81 @@ export class MicrocksApiEntityProvider implements EntityProvider {
 
     this.logger.info(`Discovering ApiEntities from Microcks ${this.baseUrl}`);
 
+    // Initiaze a collection of entities where mutation will be applied later.
+    // Setup a fetching error flag to see if we'll apply mutation in case of no entities.
     const entities: Entity[] = [];
-    var keycloakConfig: KeycloakConfig = await getKeycloakConfig(this.baseUrl);
+    var fetchError: boolean = false;
 
-    var oauthToken: string;
-    if (keycloakConfig.enabled) {
-      const authServerUrl = keycloakConfig['auth-server-url'] + '/realms/' + keycloakConfig.realm + '/protocol/openid-connect/token';
-      this.logger.info(`Keycloak authentication is enabled, retrieving a OAuth token on ${authServerUrl}`);
-      
-      oauthToken = await connectAndGetOAuthToken(authServerUrl, this.serviceAccount, this.serviceAccountCredentials);
-      oauthToken = JSON.parse(oauthToken)['access_token'];
-    } else {
-      oauthToken = '<anonymous-admin-token>';
-      this.logger.info('Keycloak authentication is not enabled, using a fake token.')
-    }
+    try {
+      // Retrieve Keycloak authentication config if any.
+      var keycloakConfig: KeycloakConfig = await getKeycloakConfig(this.baseUrl);
 
-    var page: number = 0;
-    var services: Service[];
-    var fetchServices: boolean = true;
-    while (fetchServices) {
-      this.logger.debug(`Fetching API from Microck on ${this.baseUrl}, page ${page}`);
-      services = await listServices(this.baseUrl, oauthToken, page, MicrocksApiEntityProvider.SERVICES_FETCH_SIZE);
-
-      for (let i = 0; i < services.length; i++) {
-        const service = services[i];
-        this.logger.debug("Find API " + service.name + " - " + service.version);
-
-        if (this.isServiceCandidate(service)) {
-          // Fetch the service contracts.
-          var contracts: Contract[] = await getServiceResource(this.baseUrl, oauthToken, service.id);
-
-          var contract = this.findSuitableContract(contracts);
-          if (contract != null) {
-            const apiEntity: ApiEntity = this.buildApiEntityFromService(service, contract);
-            entities.push(apiEntity);
-
-            this.logger.info("Discovered ApiEntity " + service.name + " - " + service.version);
-          }
-        }
-      };
-    
-      if (services.length < MicrocksApiEntityProvider.SERVICES_FETCH_SIZE) {
-        fetchServices = false
+      // Retrieve or use a fake oAuth token.
+      var oauthToken: string;
+      if (keycloakConfig.enabled) {
+        const authServerUrl = keycloakConfig['auth-server-url'] + '/realms/' + keycloakConfig.realm + '/protocol/openid-connect/token';
+        this.logger.info(`Keycloak authentication is enabled, retrieving a OAuth token on ${authServerUrl}`);
+        
+        oauthToken = await connectAndGetOAuthToken(authServerUrl, this.serviceAccount, this.serviceAccountCredentials);
+        oauthToken = JSON.parse(oauthToken)['access_token'];
+      } else {
+        oauthToken = '<anonymous-admin-token>';
+        this.logger.info('Keycloak authentication is not enabled, using a fake token.')
       }
-      page++;
+
+      // Now fetch Microcks with oAuth token to fill the list of services.
+      var page: number = 0;
+      var services: Service[];
+      var fetchServices: boolean = true;
+      while (fetchServices) {
+        this.logger.debug(`Fetching API from Microck on ${this.baseUrl}, page ${page}`);
+        services = await listServices(this.baseUrl, oauthToken, page, MicrocksApiEntityProvider.SERVICES_FETCH_SIZE);
+
+        for (let i = 0; i < services.length; i++) {
+          const service = services[i];
+          this.logger.debug("Find API " + service.name + " - " + service.version);
+
+          if (this.isServiceCandidate(service)) {
+            // Fetch the service contracts.
+            var contracts: Contract[] = await getServiceResource(this.baseUrl, oauthToken, service.id);
+
+            var contract = this.findSuitableContract(contracts);
+            if (contract != null) {
+              const apiEntity: ApiEntity = this.buildApiEntityFromService(service, contract);
+              entities.push(apiEntity);
+
+              this.logger.info("Discovered ApiEntity " + service.name + " - " + service.version);
+            }
+          }
+        };
+      
+        if (services.length < MicrocksApiEntityProvider.SERVICES_FETCH_SIZE) {
+          fetchServices = false
+        }
+        page++;
+      }
+    } catch (error) {
+      this.logger.error(error);
+      fetchError = true;
     }
 
-    this.logger.info(`Applying the mutation with ${entities.length} entities`);
+    if (!fetchError) {
+      this.logger.info(`Applying the mutation with ${entities.length} entities`);
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: 'MicrocksApiEntityProvider',
-      })),
-    });
+      await this.connection.applyMutation({
+        type: 'full',
+        entities: entities.map(entity => ({
+          entity,
+          locationKey: 'MicrocksApiEntityProvider',
+        })),
+      });
+    } else {
+      this.logger.warn(`Encounter a low-level error while fetching, skipping the mutation`);
+    }
   }
 
+
+  /** Can this Microcks services be imported into Backstage? */
   private isServiceCandidate(service: Service): boolean {
     if (service.type === ServiceType.REST || service.type === ServiceType.GENERIC_REST
         || service.type === ServiceType.EVENT || service.type === ServiceType.GENERIC_EVENT
@@ -212,6 +235,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     return false;
   }
 
+  /** Find the correct contract among a list of contracts attached to a service. */
   private findSuitableContract(contracts: Contract[]): Contract | null {
     for (let i = 0; i < contracts.length; i++) {
       const contract = contracts[i];
@@ -223,6 +247,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     return null;
   }
 
+  /** Build an ApiENtity from Microcks service and contract definitions. */
   private buildApiEntityFromService(service: Service, contract: Contract): ApiEntity {
     const location = `url:${this.baseUrl}/#/services/${service.id}`;
 

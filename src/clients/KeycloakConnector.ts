@@ -30,6 +30,9 @@ export function connectAndGetOAuthToken(tokenEndpoint: string, serviceAccount: s
     body: 'grant_type=client_credentials'
   })
     .then(response => {
+      if (!response.ok) {
+        throw new Error('Error while authenticating on Keycloack, code: ' + response.status);
+      }
       return response.text() as Promise<string>;
     });
 }
