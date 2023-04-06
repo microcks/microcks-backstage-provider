@@ -51,7 +51,7 @@ export function getServiceResource(baseUrl: string, authorization: string, servi
   // Fetching the corresponding contract.
   return fetch(url, {
     headers: {
-      'Authorization': authorization
+      'Authorization': `Bearer ${authorization}`
     }
   })
   .then(response => {
