@@ -6,7 +6,21 @@
 
 This is a plugin for synchronizing Microcks content into [Backstage.io](https://backstage.io/) catalog.
 
-The `microcks-backstage-provider` has a special entity provider for discovering catalog [API entities](https://backstage.io/docs/features/software-catalog/system-model#api) defined in an Microcks instance. If you're using Microcks to discover APIs from your Git repositories, auto-publish smart mock endpoints and realize contract testing of your components this provider can synchronize the API definitions from Microcks into your Backstage intance.
+The `microcks-backstage-provider` has a special entity provider for discovering catalog [API entities](https://backstage.io/docs/features/software-catalog/system-model#api) defined in one or many Microcks instances. If you're using Microcks to discover APIs from your Git repositories, auto-publish smart mock endpoints and realize contract testing of your components, this provider can synchronize the API definitions from Microcks into your Backstage intance.
+
+## Screenshots
+
+Your Services and API from different Microcks instances can be discovered and imported into your Backstage catalog.
+
+<a href="./assets/discovery-and-import.png">
+  <img src="./assets/discovery-and-import.png" width="600"> 
+</a>
+
+Labels put on your API in Microcks can be translated onto Backstage systems and ownser. The plugin add links to access the API mock endpoints and conformance tests results. 
+
+<a href="./assets/api-properties-mapping.png">
+  <img src="./assets/api-properties-mapping.png" width="600"> 
+</a>
 
 ## Install
 
