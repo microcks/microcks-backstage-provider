@@ -96,3 +96,15 @@ Once happy with result, just push versioned package on `npmjs.com` with:
 ```sh
 $ npm publish
 ```
+
+## Develop locally
+
+After having created a new backstage app like described in Backstage.io' [Getting Started](https://backstage.io/docs/getting-started/#create-your-backstage-app), just edit the `packages/backend/src/plugins/catalog.ts` file and apply same configuration as above insdtallation directive but with relative path to your local clone of this repository:
+
+```ts
+/* packages/backend/src/plugins/catalog.ts */
+
+import { MicrocksApiEntityProvider } from '../../../../../github/microcks-backstage-provider';
+```
+
+Just launch your local backstage app using `yarn dev` at the root folder level.
