@@ -16,7 +16,8 @@ Your Services and API from different Microcks instances can be discovered and im
   <img src="./assets/discovery-and-import.png" width="600"> 
 </a>
 
-Labels put on your API in Microcks can be translated onto Backstage systems and ownser. The plugin add links to access the API mock endpoints and conformance tests results. 
+
+Labels on your API in Microcks are be translated onto Backstage systems and owners. The plugin add links to access the API mock endpoints and conformance tests results. 
 
 <a href="./assets/api-properties-mapping.png">
   <img src="./assets/api-properties-mapping.png" width="600"> 
