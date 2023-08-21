@@ -27,17 +27,27 @@ export interface Config {
        */
       microcksApiEntity?: {
         [name: string]: {
-
+          /**
+           * Location of the Microcks instance
+           */
           baseUrl: string;
-
+          /**
+           * Service Account used to query data from Microcks
+           */
           serviceAccount: string;
-
+          /**
+           * Service Account Credentials used to query data from Microcks
+           */
           serviceAccountCredentials: string;
-
+          /**
+           * Label to be used as system on Backstage Catalog
+           */
           systemLabel?: string;
-
+          /**
+           * Label to be used as owner on Backstage Catalog
+           */
           ownerLabel?: string;
-
+          
           addLabels?: boolean
 
           schedule?: TaskScheduleDefinitionConfig;
