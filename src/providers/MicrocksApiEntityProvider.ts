@@ -25,7 +25,7 @@ import { Config } from '@backstage/config';
 import {
   EntityProvider,
   EntityProviderConnection
-} from '@backstage/plugin-catalog-backend';
+} from '@backstage/plugin-catalog-node';
 import { Logger } from 'winston';
 import YAML from 'yaml'
 import { connectAndGetOAuthToken } from '../clients/KeycloakConnector';
@@ -154,14 +154,14 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     // Initiaze a collection of entities where mutation will be applied later.
     // Setup a fetching error flag to see if we'll apply mutation in case of no entities.
     const entities: Entity[] = [];
-    var fetchError: boolean = false;
+    let fetchError: boolean = false;
 
     try {
       // Retrieve Keycloak authentication config if any.
-      var keycloakConfig: KeycloakConfig = await getKeycloakConfig(this.baseUrl);
+      let keycloakConfig: KeycloakConfig = await getKeycloakConfig(this.baseUrl);
 
       // Retrieve or use a fake oAuth token.
-      var oauthToken: string;
+      let oauthToken: string;
       if (keycloakConfig.enabled) {
         const authServerUrl = keycloakConfig['auth-server-url'] + '/realms/' + keycloakConfig.realm + '/protocol/openid-connect/token';
         this.logger.info(`Keycloak authentication is enabled, retrieving a OAuth token on ${authServerUrl}`);
@@ -174,22 +174,22 @@ export class MicrocksApiEntityProvider implements EntityProvider {
       }
 
       // Now fetch Microcks with oAuth token to fill the list of services.
-      var page: number = 0;
-      var services: Service[];
-      var fetchServices: boolean = true;
+      let page: number = 0;
+      let services: Service[];
+      let fetchServices: boolean = true;
       while (fetchServices) {
         this.logger.debug(`Fetching API from Microck on ${this.baseUrl}, page ${page}`);
         services = await listServices(this.baseUrl, oauthToken, page, MicrocksApiEntityProvider.SERVICES_FETCH_SIZE);
 
-        for (let i = 0; i < services.length; i++) {
-          const service = services[i];
+        for (const element of services) {
+          const service = element;
           this.logger.debug("Find API " + service.name + " - " + service.version);
 
           if (this.isServiceCandidate(service)) {
             // Fetch the service contracts.
-            var contracts: Contract[] = await getServiceResource(this.baseUrl, oauthToken, service.id);
+            let contracts: Contract[] = await getServiceResource(this.baseUrl, oauthToken, service.id);
 
-            var contract = this.findSuitableContract(contracts);
+            let contract = this.findSuitableContract(contracts);
             if (contract != null) {
               const apiEntity: ApiEntity = this.buildApiEntityFromService(service, contract);
               entities.push(apiEntity);
@@ -237,8 +237,8 @@ export class MicrocksApiEntityProvider implements EntityProvider {
 
   /** Find the correct contract among a list of contracts attached to a service. */
   private findSuitableContract(contracts: Contract[]): Contract | null {
-    for (let i = 0; i < contracts.length; i++) {
-      const contract = contracts[i];
+    for (const element of contracts) {
+      const contract = element;
       if (contract.type === ContractType.OPEN_API_SPEC || contract.type === ContractType.ASYNC_API_SPEC 
           || contract.type === ContractType.PROTOBUF_SCHEMA) {
         return contract;
@@ -251,9 +251,9 @@ export class MicrocksApiEntityProvider implements EntityProvider {
   private buildApiEntityFromService(service: Service, contract: Contract): ApiEntity {
     const location = `url:${this.baseUrl}/#/services/${service.id}`;
 
-    var description: string | undefined;
+    let description: string | undefined;
     if (contract.type === ContractType.OPEN_API_SPEC || contract.type == ContractType.ASYNC_API_SPEC) {
-      var spec;
+      let spec;
       if (contract.content.startsWith('{')) {
         spec = JSON.parse(contract.content);
       } else {
@@ -298,7 +298,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
   }
 
   private getApiEntityLabels(service: Service): Record<string, string> | undefined {
-    var labels: Record<string, string> = {};
+    let labels: Record<string, string> = {};
     labels['version'] = service.version;
     if (this.addLabels && service.metadata.labels) {
       for (const label in service.metadata.labels) {
@@ -316,14 +316,11 @@ export class MicrocksApiEntityProvider implements EntityProvider {
       case ServiceType.REST:
       case ServiceType.GENERIC_REST:
         return 'openapi';
-        break;
       case ServiceType.EVENT:
       case ServiceType.GENERIC_EVENT:
         return 'asyncapi';
-        break;
       case ServiceType.GRPC:
         return 'grpc';
-        break;
     }
     return 'openapi';
   }

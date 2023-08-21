@@ -17,7 +17,7 @@
 import { Contract, KeycloakConfig, Service } from "./types";
 
 export function getKeycloakConfig(baseUrl: string): Promise<KeycloakConfig> {
-  var url: string = getApiUrl(baseUrl);
+  let url: string = getApiUrl(baseUrl);
   // Fetching the Keycloak configuration.
   return fetch(url + '/keycloak/config')
     .then(response => {
@@ -29,7 +29,7 @@ export function getKeycloakConfig(baseUrl: string): Promise<KeycloakConfig> {
 }
 
 export function listServices(baseUrl: string, authorization: string, page: number, size: number): Promise<Service[]> {
-  var url: string = getApiUrl(baseUrl);
+  let url: string = getApiUrl(baseUrl);
   url = url + '/services?page=' + page + '&size=' + size;
   // Fetching the page of services.
   return fetch(url, {
@@ -48,7 +48,7 @@ export function listServices(baseUrl: string, authorization: string, page: numbe
 }
 
 export function getServiceResource(baseUrl: string, authorization: string, serviceId: string): Promise<Contract[]> {
-  var url: string = getApiUrl(baseUrl);
+  let url: string = getApiUrl(baseUrl);
   url = url + '/resources/service/' + serviceId;
   // Fetching the corresponding contract.
   return fetch(url, {
