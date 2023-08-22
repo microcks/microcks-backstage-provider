@@ -23,5 +23,6 @@ export type MicrocksConfig = {
   systemLabel?: string;
   ownerLabel?: string;
   addLabels?: boolean;
+  addOpenAPIServerUrl?: boolean;
   schedule?: TaskScheduleDefinition;
 };

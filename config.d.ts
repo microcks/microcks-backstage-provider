@@ -47,8 +47,15 @@ export interface Config {
            * Label to be used as owner on Backstage Catalog
            */
           ownerLabel?: string;
-          
-          addLabels?: boolean
+          /**
+           * Should other Microcks labels be reported on Backstage Catalog?
+           */
+          addLabels?: boolean;
+          /**
+           * Should we had the Microcks instance mock URL to servers in OpenAPI specifications?
+           * (so that it allows Swagger-UI Try-It-Out to use it)
+           */
+          addOpenAPIServerUrl?: boolean;
 
           schedule?: TaskScheduleDefinitionConfig;
         };
