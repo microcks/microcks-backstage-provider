@@ -26,7 +26,7 @@ import {
   EntityProvider,
   EntityProviderConnection
 } from '@backstage/plugin-catalog-node';
-import { Logger, log } from 'winston';
+import { Logger } from 'winston';
 import YAML from 'yaml'
 import { connectAndGetOAuthToken } from '../clients/KeycloakConnector';
 import { getKeycloakConfig, getServiceResource, listServices } from '../clients/MicrocksAPIConnector';
@@ -230,7 +230,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
   private isServiceCandidate(service: Service): boolean {
     if (service.type === ServiceType.REST || service.type === ServiceType.GENERIC_REST
         || service.type === ServiceType.EVENT || service.type === ServiceType.GENERIC_EVENT
-        || service.type === ServiceType.GRPC) {
+        || service.type === ServiceType.GRPC || service.type === ServiceType.GRAPHQL) {
       return true;
     }
     return false;
@@ -241,7 +241,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     for (const element of contracts) {
       const contract = element;
       if (contract.type === ContractType.OPEN_API_SPEC || contract.type === ContractType.ASYNC_API_SPEC 
-          || contract.type === ContractType.PROTOBUF_SCHEMA) {
+          || contract.type === ContractType.PROTOBUF_SCHEMA || contract.type == ContractType.GRAPHQL_SCHEMA) {
         return contract;
       }
     }
@@ -347,6 +347,8 @@ export class MicrocksApiEntityProvider implements EntityProvider {
         return 'asyncapi';
       case ServiceType.GRPC:
         return 'grpc';
+      case ServiceType.GRAPHQL:
+        return 'graphql';
     }
     return 'openapi';
   }
