@@ -16,23 +16,6 @@
 
 import { TaskScheduleDefinitionConfig } from '@backstage/backend-tasks';
 
-interface MicrocksConfig {
-  
-  baseUrl: string;
-
-  serviceAccount: string;
-
-  serviceAccountCredentials: string;
-
-  systemLabel?: string;
-
-  ownerLabel?: string;
-
-  addLabels?: boolean
-
-  schedule?: TaskScheduleDefinitionConfig;
-}
-
 export interface Config {
   catalog?: {
     /**
@@ -42,7 +25,34 @@ export interface Config {
       /**
        * MicrocksApiEntityProvider configuration
        */
-      microcksApiEntity?: Record<string, MicrocksConfig>;
+      microcksApiEntity?: {
+        [name: string]: {
+          /**
+           * Location of the Microcks instance
+           */
+          baseUrl: string;
+          /**
+           * Service Account used to query data from Microcks
+           */
+          serviceAccount: string;
+          /**
+           * Service Account Credentials used to query data from Microcks
+           */
+          serviceAccountCredentials: string;
+          /**
+           * Label to be used as system on Backstage Catalog
+           */
+          systemLabel?: string;
+          /**
+           * Label to be used as owner on Backstage Catalog
+           */
+          ownerLabel?: string;
+          
+          addLabels?: boolean
+
+          schedule?: TaskScheduleDefinitionConfig;
+        };
+      };
     };
   };
 }
