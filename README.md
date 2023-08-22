@@ -28,7 +28,7 @@ Labels on your API in Microcks are be translated onto Backstage systems and owne
 After having created a new backstage app like described in Backstage.io' [Getting Started](https://backstage.io/docs/getting-started/#create-your-backstage-app), enter the app directory and run this command to add the Microcks Entity provider as a new backend plugin:
 
 ```sh
-yarn add --cwd packages/backend @microcks/microcks-backstage-provider@^0.0.2
+yarn add --cwd packages/backend @microcks/microcks-backstage-provider@^0.0.3
 ```
 
 ## Configure
