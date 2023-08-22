@@ -43,6 +43,7 @@ function readMicrocksApiEntityConfig(id: string, config: Config): MicrocksConfig
   const systemLabel = config.getOptionalString('systemLabel');
   const ownerLabel = config.getOptionalString('ownerLabel');
   const addLabels = config.getOptionalBoolean('addLabels') || true;
+  const addOpenAPIServerUrl = config.getOptionalBoolean('addOpenAPIServerUrl') || false;
 
   const schedule = config.has('schedule')
     ? readTaskScheduleDefinitionFromConfig(config.getConfig('schedule'))
@@ -56,6 +57,7 @@ function readMicrocksApiEntityConfig(id: string, config: Config): MicrocksConfig
     systemLabel,
     ownerLabel,
     addLabels,
+    addOpenAPIServerUrl,
     schedule,
   };
 }

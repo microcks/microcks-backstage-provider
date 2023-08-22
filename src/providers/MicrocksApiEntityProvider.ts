@@ -26,7 +26,7 @@ import {
   EntityProvider,
   EntityProviderConnection
 } from '@backstage/plugin-catalog-node';
-import { Logger } from 'winston';
+import { Logger, log } from 'winston';
 import YAML from 'yaml'
 import { connectAndGetOAuthToken } from '../clients/KeycloakConnector';
 import { getKeycloakConfig, getServiceResource, listServices } from '../clients/MicrocksAPIConnector';
@@ -52,6 +52,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
   private readonly systemLabel?: string;
   private readonly ownerLabel?: string;
   private readonly addLabels?: boolean = true;
+  private readonly addOpenAPIServerUrl?: boolean = false;
 
   private readonly logger: Logger;
 
@@ -106,11 +107,11 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     this.systemLabel = config.systemLabel;
     this.ownerLabel = config.ownerLabel;
     this.addLabels = config.addLabels;
+    this.addOpenAPIServerUrl = config.addOpenAPIServerUrl;
 
     this.logger = logger.child({
       target: this.getProviderName(),
     });
-
     this.scheduleFn = this.createScheduleFn(taskRunner);
   }
 
@@ -247,11 +248,13 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     return null;
   }
 
-  /** Build an ApiENtity from Microcks service and contract definitions. */
+  /** Build an ApiEntity from Microcks service and contract definitions. */
   private buildApiEntityFromService(service: Service, contract: Contract): ApiEntity {
     const location = `url:${this.baseUrl}/#/services/${service.id}`;
 
     let description: string | undefined;
+    let contractContent: string = contract.content;
+
     if (contract.type === ContractType.OPEN_API_SPEC || contract.type == ContractType.ASYNC_API_SPEC) {
       let spec;
       if (contract.content.startsWith('{')) {
@@ -260,6 +263,25 @@ export class MicrocksApiEntityProvider implements EntityProvider {
         spec = YAML.parse(contract.content);
       }
       description = spec.info.description;
+
+      // Add a new server to enable the Swagger-UI Try-It-Out feature on Microcks mocks.
+      if (this.addOpenAPIServerUrl && contract.type === ContractType.OPEN_API_SPEC) {
+        this.logger.info("Adding a new microcksServer in OpenAPI specification");
+        let microcksServer = {
+          "url": `${this.baseUrl}/rest/` + this.encodeUrl(`${service.name}/${service.version}`),
+          "description": `Microcks ${this.env} sandbox`
+        }
+        if (spec.servers == undefined) {
+          spec['servers'] = [];
+        }
+        spec.servers.push(microcksServer);
+        
+        if (contract.content.startsWith('{')) {
+          contractContent = JSON.stringify(spec)
+        } else {
+          contractContent = YAML.stringify(spec);
+        }
+      }
     }
     if (!description) {
       description = 'Version: ' + service.version;
@@ -279,7 +301,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
         links: [
           {
             url: `${this.baseUrl}/#/services/${service.id}`,
-            title: 'Microcks mock'
+            title: 'Microcks mocks'
           },
           {
             url: `${this.baseUrl}/#/test/service/${service.id}`,
@@ -292,9 +314,13 @@ export class MicrocksApiEntityProvider implements EntityProvider {
         lifecycle: this.env,
         system: this.getApiEntitySystem(service),
         owner: this.getApiEntityOwner(service),
-        definition: contract.content
+        definition: contractContent
       }
     }
+  }
+
+  private encodeUrl(url: string): string {
+    return url.replace(/\s/g, '+');
   }
 
   private getApiEntityLabels(service: Service): Record<string, string> | undefined {

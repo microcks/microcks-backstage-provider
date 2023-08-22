@@ -51,6 +51,8 @@ catalog:
         serviceAccountCredentials: ab54d329-e435-41ae-a900-ec6b3fe15c54
         systemLabel: domain
         ownerLabel: team 
+        addLabels: false # optional; copy any other labels from Microcks in Backstage catalog - default is true
+        addOpenAPIServerUrl: true # optional; add a server in OpenAPI spec to point to Microcks sandbox URL - default is false
         schedule: # optional; same options as in TaskScheduleDefinition
           # supports cron, ISO duration, "human duration" as used in code
           frequency: { minutes: 2 }
