@@ -9215,11 +9215,6 @@ joycon@^3.0.1:
   resolved "https://registry.npmjs.org/joycon/-/joycon-3.1.1.tgz"
   integrity sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==
 
-js-base64@^3.7.3:
-  version "3.7.3"
-  resolved "https://registry.npmjs.org/js-base64/-/js-base64-3.7.3.tgz"
-  integrity sha512-PAr6Xg2jvd7MCR6Ld9Jg3BmTcjYsHEBx1VlwEwULb/qowPf5VD9kEMagj23Gm7JRnSvE/Da/57nChZjnvL8v6A==
-
 js-levenshtein@^1.1.6:
   version "1.1.6"
   resolved "https://registry.npmjs.org/js-levenshtein/-/js-levenshtein-1.1.6.tgz"

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { Base64 } from 'js-base64'
 
 export function connectAndGetOAuthToken(tokenEndpoint: string, serviceAccount: string, serviceAccountCredentials: string): Promise<string> {
 
-  const credentials: string = Base64.encode(serviceAccount + ':' + serviceAccountCredentials);
+  const credentials: string = Buffer.from(serviceAccount + ':' + serviceAccountCredentials).toString('base64');
 
   return fetch(tokenEndpoint, {
     method: 'POST',
