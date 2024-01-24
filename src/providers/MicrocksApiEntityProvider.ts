@@ -357,13 +357,13 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     if (this.systemLabel && service.metadata.labels && service.metadata.labels[this.systemLabel]) {
       return service.metadata.labels[this.systemLabel];
     }
-    return '';
+    return 'microcks';
   }
 
   private getApiEntityOwner(service: Service): string {
     if (this.ownerLabel && service.metadata.labels && service.metadata.labels[this.ownerLabel]) {
       return service.metadata.labels[this.ownerLabel];
     }
-    return '';
+    return 'microcks';
   }
 }
