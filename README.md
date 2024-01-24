@@ -1,8 +1,9 @@
 # Microcks Backstage provider
 
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/microcks/microcks-backstage-provider/build-verify.yml?logo=github&style=for-the-badge)](https://github.com/microcks/microcks-backstage-provider/actions)
 [![Version](https://img.shields.io/npm/v/@microcks/microcks-backstage-provider?color=blue&style=for-the-badge)]((https://search.maven.org/artifact/io.github.microcks/microcks))
 [![License](https://img.shields.io/github/license/microcks/microcks?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Project Chat](https://img.shields.io/badge/chat-on_zulip-pink.svg?color=ff69b4&style=for-the-badge&logo=zulip)](https://microcksio.zulipchat.com/)
+[![Project Chat](https://img.shields.io/badge/discord-microcks-pink.svg?color=7289da&style=for-the-badge&logo=discord)](https://microcks.io/discord-invite/)
 
 This is a plugin for synchronizing Microcks content into [Backstage.io](https://backstage.io/) catalog.
 
