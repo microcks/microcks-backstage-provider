@@ -29,7 +29,7 @@ Labels on your API in Microcks are be translated onto Backstage systems and owne
 After having created a new backstage app like described in Backstage.io' [Getting Started](https://backstage.io/docs/getting-started/#create-your-backstage-app), enter the app directory and run this command to add the Microcks Entity provider as a new backend plugin:
 
 ```sh
-yarn add --cwd packages/backend @microcks/microcks-backstage-provider@^0.0.3
+yarn add --cwd packages/backend @microcks/microcks-backstage-provider@^0.0.4
 ```
 
 ## Configure
@@ -106,7 +106,7 @@ After having started your Backstage app, you should see some lines like those be
 After a fresh `git clone`, you can install dependencies, compile typescript and build a new distribution with those commands:
 
 ```sh
-$ yarn install && yarn tsc && yarn run build
+$ yarn install && yarn export-dynamic && yarn tsc && yarn run build
 ```
 
 Once happy with result, just push versioned package on `npmjs.com` with:
