@@ -29,7 +29,7 @@ Labels on your API in Microcks are be translated onto Backstage systems and owne
 After having created a new backstage app like described in Backstage.io' [Getting Started](https://backstage.io/docs/getting-started/#create-your-backstage-app), enter the app directory and run this command to add the Microcks Entity provider as a new backend plugin:
 
 ```sh
-yarn add --cwd packages/backend @microcks/microcks-backstage-provider@^0.0.4
+yarn add --cwd packages/backend @microcks/microcks-backstage-provider@^0.0.5
 ```
 
 ## Configure
@@ -63,7 +63,22 @@ catalog:
 
 Configuration is pretty straightforward but your may check Microcks documentation on [Service Accounts](https://microcks.io/documentation/automating/service-account/) for details.
 
-Once you've done that, you'll also need to add the segment below to `packages/backend/src/plugins/catalog.ts`:
+Once you've done that, you'll also need to declare the Microcks as a backend module or an available entity provider. This operation differs depending on the version of Backstage you're using.
+
+### For Backstage versions with the new Backend system
+
+> Typically for application created via the CLI starting with Backstage `1.24`
+
+You'll need to add the Microcks backend module in the `packages/backend/src/index.ts` file, before the `backend.start()` directive. Use this snippet below:
+
+```ts
+// microcks catalog provider
+backend.add(import('@microcks/microcks-backstage-provider'));
+```
+
+### For Backstage versions with the old Backend plugin system
+
+You need add the segment below to `packages/backend/src/plugins/catalog.ts`:
 
 ```ts
 /* packages/backend/src/plugins/catalog.ts */
