@@ -1,7 +1,8 @@
 # Microcks Backstage provider
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/microcks/microcks-backstage-provider/build-verify.yml?logo=github&style=for-the-badge)](https://github.com/microcks/microcks-backstage-provider/actions)
-[![Version](https://img.shields.io/npm/v/@microcks/microcks-backstage-provider?color=blue&style=for-the-badge)]((https://search.maven.org/artifact/io.github.microcks/microcks))
+[![Version](https://img.shields.io/npm/v/@microcks/microcks-backstage-provider?color=blue&style=for-the-badge)]((https://search.maven.org/artifact/io.github.microcks/microcks)[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmicrocks%2Fmicrocks-backstage-provider.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmicrocks%2Fmicrocks-backstage-provider?ref=badge_shield)
+)
 [![License](https://img.shields.io/github/license/microcks/microcks?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Project Chat](https://img.shields.io/badge/discord-microcks-pink.svg?color=7289da&style=for-the-badge&logo=discord)](https://microcks.io/discord-invite/)
 
@@ -141,3 +142,6 @@ import { MicrocksApiEntityProvider } from '../../../../../github/microcks-backst
 ```
 
 Just launch your local backstage app using `yarn dev` at the root folder level.
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmicrocks%2Fmicrocks-backstage-provider.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmicrocks%2Fmicrocks-backstage-provider?ref=badge_large)
