@@ -108,3 +108,5 @@ dist-types
 
 # dynamic
 dist-dynamic/
+
+.DS_Store
