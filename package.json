@@ -1,6 +1,6 @@
 {
   "name": "@microcks/microcks-backstage-provider",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Laurent Broudoux <laurent@microcks.io>",
   "repository": {
     "type": "git",
