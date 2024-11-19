@@ -2789,9 +2789,9 @@
     winston-transport "^4.5.0"
 
 "@backstage/backend-common@^0.19.8":
-  version "0.19.9"
-  resolved "https://registry.npmjs.org/@backstage/backend-common/-/backend-common-0.19.9.tgz"
-  integrity sha512-xaVEMnr3BNokABwPzPdwR4X5RLwbLlKsuT9g9KAuGurckBwgjSe2to75p1SjP75yKtp54PpqsIh64NKWZ9vqNg==
+  version "0.19.10"
+  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.19.10.tgz#be99cbdbc6946f8adbbf2a21bab33e26473206e7"
+  integrity sha512-SXWNDIqyJ4xu89IsO67/hyGfGiV4PJdVkrvz+eJTBs/xFk3+OfA5LzMp6reDSnIoaehOlAtPalqBm1Vur3bftA==
   dependencies:
     "@aws-sdk/abort-controller" "^3.347.0"
     "@aws-sdk/client-s3" "^3.350.0"
@@ -2850,9 +2850,9 @@
     yn "^4.0.0"
 
 "@backstage/backend-common@^0.20.1":
-  version "0.20.1"
-  resolved "https://registry.npmjs.org/@backstage/backend-common/-/backend-common-0.20.1.tgz"
-  integrity sha512-VI3b2Bio+ne/IgVhKh6wP+ogqBVV+vo8ck/n0RHwtukpRc0Gx92M+LPfqf4UxlV7fvY2tYSFXtXLXupeW8aWfQ==
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.20.2.tgz#0ce5b7bfcb91918008c4ec6bb6aede72c4474e20"
+  integrity sha512-hQazpWVhjcOIic1bDMVKZ2pQn9Th4gKmI+1Q5aT2cls7dnXNF7Mwb3bRgnVQk+18bEn6sxHOUyCAFd8KzYTtLg==
   dependencies:
     "@aws-sdk/abort-controller" "^3.347.0"
     "@aws-sdk/client-s3" "^3.350.0"
