@@ -155,7 +155,7 @@ After having started your Backstage app, you should see some lines like those be
 After a fresh `git clone`, you can install dependencies, compile typescript and build a new distribution with those commands:
 
 ```sh
-$ yarn install && yarn export-dynamic && yarn tsc && yarn run build
+$ yarn install && yarn tsc && yarn export-dynamic && yarn run build
 ```
 
 Once happy with result, just push versioned package on `npmjs.com` with:
