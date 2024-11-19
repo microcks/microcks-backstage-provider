@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginTaskScheduler, TaskRunner } from '@backstage/backend-tasks';
+import { SchedulerService, SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import {
   Entity,
   ApiEntity,
@@ -69,8 +69,8 @@ export class MicrocksApiEntityProvider implements EntityProvider {
       configRoot: Config, 
       options: {
         logger: Logger;
-        schedule?: TaskRunner;
-        scheduler?: PluginTaskScheduler;
+        schedule?: SchedulerServiceTaskRunner;
+        scheduler?: SchedulerService;
       }) : MicrocksApiEntityProvider[] {
 
     const providerConfigs = readMicrocksApiEntityConfigs(configRoot);
@@ -98,7 +98,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     });
   }
 
-  private constructor(config: MicrocksConfig, logger: Logger, taskRunner: TaskRunner) {
+  private constructor(config: MicrocksConfig, logger: Logger, taskRunner: SchedulerServiceTaskRunner) {
     this.env = config.id;
     this.baseUrl = config.baseUrl;
     this.serviceAccount = config.serviceAccount;
@@ -114,7 +114,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     this.scheduleFn = this.createScheduleFn(taskRunner);
   }
 
-  private createScheduleFn(taskRunner: TaskRunner): () => Promise<void> {
+  private createScheduleFn(taskRunner: SchedulerServiceTaskRunner): () => Promise<void> {
     return async () => {
       const taskId = `${this.getProviderName()}:run`;
       return taskRunner.run({
