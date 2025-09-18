@@ -38,6 +38,7 @@ jobs:
       - name: Set release version
         run: |
           yarn install
+          yarn tsc
           npm version ${{ github.event.inputs.version }} --git-tag-version=false
 
       - name: Commit, push and tag changes
