@@ -16,6 +16,5 @@
 
 export * from './clients';
 export * from './providers';
-export * from './service/router';
 export * from './dynamic/index';
-export { catalogModuleMicrocksModule as default } from './module.ts';
+export { catalogModuleMicrocksModule as default } from './module';

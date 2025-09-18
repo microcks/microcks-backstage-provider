@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SchedulerService, SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { LoggerService, SchedulerService, SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import {
   Entity,
   ApiEntity,
@@ -25,7 +25,7 @@ import {
   EntityProvider,
   EntityProviderConnection
 } from '@backstage/plugin-catalog-node';
-import { Logger } from 'winston';
+
 import YAML from 'yaml'
 import { connectAndGetOAuthToken } from '../clients/KeycloakConnector';
 import { getKeycloakConfig, getServiceResource, listServices } from '../clients/MicrocksAPIConnector';
@@ -53,7 +53,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
   private readonly addLabels?: boolean = true;
   private readonly addOpenAPIServerUrl?: boolean = false;
 
-  private readonly logger: Logger;
+  private readonly logger: LoggerService;
 
   private connection?: EntityProviderConnection;
   private readonly scheduleFn: () => Promise<void>;
@@ -68,7 +68,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
   static fromConfig(
       configRoot: Config, 
       options: {
-        logger: Logger;
+        logger: LoggerService;
         schedule?: SchedulerServiceTaskRunner;
         scheduler?: SchedulerService;
       }) : MicrocksApiEntityProvider[] {
@@ -98,7 +98,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
     });
   }
 
-  private constructor(config: MicrocksConfig, logger: Logger, taskRunner: SchedulerServiceTaskRunner) {
+  private constructor(config: MicrocksConfig, logger: LoggerService, taskRunner: SchedulerServiceTaskRunner) {
     this.env = config.id;
     this.baseUrl = config.baseUrl;
     this.serviceAccount = config.serviceAccount;
@@ -123,7 +123,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
           try {
             await this.run();
           } catch (error) {
-            this.logger.error(error);
+            this.logger.error(error instanceof Error ? error.message : String(error));
           }
         },
       });
@@ -205,7 +205,7 @@ export class MicrocksApiEntityProvider implements EntityProvider {
         page++;
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error instanceof Error ? error.message : String(error));
       fetchError = true;
     }
 
