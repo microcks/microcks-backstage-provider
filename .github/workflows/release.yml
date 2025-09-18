@@ -37,7 +37,7 @@ jobs:
 
       - name: Set release version
         run: |
-          npm install
+          yarn install
           npm version ${{ github.event.inputs.version }} --git-tag-version=false
 
       - name: Commit, push and tag changes
@@ -52,8 +52,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm sbom --sbom-format spdx > microcks-microcks-backstage-provider-${{ github.event.inputs.version }}.spdx-sbom.json 
-          npm run build
+          # Generate SBOM but only consider package-lock.json file to avoid noise from yarn files
+          npm sbom --package-lock-only --sbom-format spdx > microcks-microcks-backstage-provider-${{ github.event.inputs.version }}.spdx-sbom.json 
+          yarn tsc
+          yarn export-dynamic
+          yarn run build
           npm publish --provenance
           npm pack
 

@@ -63,7 +63,7 @@ Labels on your API in Microcks are be translated onto Backstage systems and owne
 After having created a new backstage app like described in Backstage.io' [Getting Started](https://backstage.io/docs/getting-started/#create-your-backstage-app), enter the app directory and run this command to add the Microcks Entity provider as a new backend plugin:
 
 ```sh
-yarn add --cwd packages/backend @microcks/microcks-backstage-provider@^0.0.6
+yarn --cwd packages/backend add @microcks/microcks-backstage-provider@^0.0.6
 ```
 
 ## Configure
@@ -158,11 +158,9 @@ After a fresh `git clone`, you can install dependencies, compile typescript and 
 $ yarn install && yarn tsc && yarn export-dynamic && yarn run build
 ```
 
-Once happy with result, just push versioned package on `npmjs.com` with:
+When publishing a release withe the `release` GitHub Action, generating the SBOM from Yarn files fails because of unresolved transitive dependencies. So we included `package-lock.json` and generate the SBOM with the `--package-lock-only` flag.
 
-```sh
-$ npm publish
-```
+> So, whenever you update a dependency in `package.json` and then `yarn.lock`, please ensure that you also update `package-lock.json` otherwise the next release will fail!
 
 ## Develop locally
 
