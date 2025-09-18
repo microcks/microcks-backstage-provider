@@ -13,9 +13,9 @@ The `microcks-backstage-provider` has a special entity provider for discovering 
 
 ## Build Status
 
-Latest released version is `0.0.6`.
+Latest released version is `0.0.7`.
 
-Current development version is `0.0.7`.
+Current development version is `0.0.8-SNAPSHOT`.
 
 #### Fossa license and security scans
 
@@ -40,7 +40,8 @@ To get involved with our community, please make sure you are familiar with the p
 
 | Basckstage Client | Microcks Backstage provider Version |
 |-------------------|------------------|
-| `>= 1.31`         | `0.0.6` and +    |
+| `>= 1.43`         | `0.0.7` and +    |
+| `>= 1.31 && <1.43`| `0.0.6` and +    |
 | `< 1.31`          | `0.0.5`          |
 
 ## Screenshots
@@ -63,7 +64,7 @@ Labels on your API in Microcks are be translated onto Backstage systems and owne
 After having created a new backstage app like described in Backstage.io' [Getting Started](https://backstage.io/docs/getting-started/#create-your-backstage-app), enter the app directory and run this command to add the Microcks Entity provider as a new backend plugin:
 
 ```sh
-yarn --cwd packages/backend add @microcks/microcks-backstage-provider@^0.0.6
+yarn --cwd packages/backend add @microcks/microcks-backstage-provider@^0.0.7
 ```
 
 ## Configure
